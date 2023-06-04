@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "axios-extra": "^0.0.6",
+    "spark-md5": "^3.0.2"
+  }
+}

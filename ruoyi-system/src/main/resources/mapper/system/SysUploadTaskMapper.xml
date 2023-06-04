@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.SysUploadTaskMapper">
+    
+    <resultMap type="SysUploadTask" id="SysUploadTaskResult">
+        <result property="id"    column="id"    />
+        <result property="uploadId"    column="upload_id"    />
+        <result property="fileIdentifier"    column="file_identifier"    />
+        <result property="fileName"    column="file_name"    />
+        <result property="bucketName"    column="bucket_name"    />
+        <result property="objectKey"    column="object_key"    />
+        <result property="totalSize"    column="total_size"    />
+        <result property="chunkSize"    column="chunk_size"    />
+        <result property="chunkNum"    column="chunk_num"    />
+    </resultMap>
+
+    <sql id="selectSysUploadTaskVo">
+        select id, upload_id, file_identifier, file_name, bucket_name, object_key, total_size, chunk_size, chunk_num from sys_upload_task
+    </sql>
+
+    <select id="selectSysUploadTaskList" parameterType="SysUploadTask" resultMap="SysUploadTaskResult">
+        <include refid="selectSysUploadTaskVo"/>
+        <where>  
+            <if test="uploadId != null  and uploadId != ''"> and upload_id = #{uploadId}</if>
+            <if test="fileIdentifier != null  and fileIdentifier != ''"> and file_identifier = #{fileIdentifier}</if>
+            <if test="fileName != null  and fileName != ''"> and file_name like concat('%', #{fileName}, '%')</if>
+            <if test="bucketName != null  and bucketName != ''"> and bucket_name like concat('%', #{bucketName}, '%')</if>
+            <if test="objectKey != null  and objectKey != ''"> and object_key = #{objectKey}</if>
+            <if test="totalSize != null "> and total_size = #{totalSize}</if>
+            <if test="chunkSize != null "> and chunk_size = #{chunkSize}</if>
+            <if test="chunkNum != null "> and chunk_num = #{chunkNum}</if>
+        </where>
+    </select>
+    
+    <select id="selectSysUploadTaskById" parameterType="Long" resultMap="SysUploadTaskResult">
+        <include refid="selectSysUploadTaskVo"/>
+        where id = #{id}
+    </select>
+    <select id="selectSysUploadTaskByIdentifier" resultMap="SysUploadTaskResult">
+        <include refid="selectSysUploadTaskVo"/>  where file_identifier = #{fileIdentifier}
+    </select>
+
+    <insert id="insertSysUploadTask" parameterType="SysUploadTask">
+        insert into sys_upload_task
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="uploadId != null and uploadId != ''">upload_id,</if>
+            <if test="fileIdentifier != null and fileIdentifier != ''">file_identifier,</if>
+            <if test="fileName != null and fileName != ''">file_name,</if>
+            <if test="bucketName != null and bucketName != ''">bucket_name,</if>
+            <if test="objectKey != null and objectKey != ''">object_key,</if>
+            <if test="totalSize != null">total_size,</if>
+            <if test="chunkSize != null">chunk_size,</if>
+            <if test="chunkNum != null">chunk_num,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="uploadId != null and uploadId != ''">#{uploadId},</if>
+            <if test="fileIdentifier != null and fileIdentifier != ''">#{fileIdentifier},</if>
+            <if test="fileName != null and fileName != ''">#{fileName},</if>
+            <if test="bucketName != null and bucketName != ''">#{bucketName},</if>
+            <if test="objectKey != null and objectKey != ''">#{objectKey},</if>
+            <if test="totalSize != null">#{totalSize},</if>
+            <if test="chunkSize != null">#{chunkSize},</if>
+            <if test="chunkNum != null">#{chunkNum},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSysUploadTask" parameterType="SysUploadTask">
+        update sys_upload_task
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="uploadId != null and uploadId != ''">upload_id = #{uploadId},</if>
+            <if test="fileIdentifier != null and fileIdentifier != ''">file_identifier = #{fileIdentifier},</if>
+            <if test="fileName != null and fileName != ''">file_name = #{fileName},</if>
+            <if test="bucketName != null and bucketName != ''">bucket_name = #{bucketName},</if>
+            <if test="objectKey != null and objectKey != ''">object_key = #{objectKey},</if>
+            <if test="totalSize != null">total_size = #{totalSize},</if>
+            <if test="chunkSize != null">chunk_size = #{chunkSize},</if>
+            <if test="chunkNum != null">chunk_num = #{chunkNum},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSysUploadTaskById" parameterType="Long">
+        delete from sys_upload_task where id = #{id}
+    </delete>
+
+    <delete id="deleteSysUploadTaskByIds" parameterType="String">
+        delete from sys_upload_task where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
